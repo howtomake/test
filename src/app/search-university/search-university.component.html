@@ -14,10 +14,11 @@
 <mat-form-field *ngIf="!!displayedColumns.length && !process" appearance="standard">
   <mat-label>Enter university name</mat-label>
   <input matInput placeholder="Ex. Middle" [formControl]="universityName">
-  <mat-hint *ngIf="errorFiltered"><b>nothing found :(</b></mat-hint>
 </mat-form-field>
 
-<div class="list-view" [ngClass]="{'load-end': !!displayedColumns.length && !process && !errorUniversityFind}">
+<mat-hint *ngIf="errorFiltered"><b>nothing found :(</b></mat-hint>
+
+<div class="list-view" [ngClass]="{'load-end': !!displayedColumns.length && !process && !errorFiltered}">
 
   <div class="table-wrap">
     <table mat-table [dataSource]="dataSource" matSort cdkDropList (cdkDropListDropped)="onDrop($event)">

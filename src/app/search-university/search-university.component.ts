@@ -24,7 +24,6 @@ export class SearchUniversityComponent implements OnInit {
 
   errorCountry: number = 0;
   errorUniversity: boolean = false;
-  errorUniversityFind: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -50,19 +49,20 @@ export class SearchUniversityComponent implements OnInit {
       debounceTime(50),
       startWith(''),
       switchMap(value => {
-        if (!!value && value.length > 2) {
-          return this.errorCountry === 0 || value.length < this.errorCountry
-            ? this.api.getCountry(value).pipe(
-              tap(() => this.errorCountry = 0),
-              catchError(() => {
-                this.errorCountry = value.length;
-                return of([]);
-              }))
-            : of([]);
+        if (!value || value.length < 3) {
+          this.errorCountry = 0;
+          this.displayedColumns = [];
+          return of([]);
         }
-        this.errorCountry = 0;
-        this.displayedColumns = [];
-        return of([]);
+        return this.errorCountry === 0 || value.length < this.errorCountry
+          ? this.api.getCountry(value).pipe(
+            tap(() => this.errorCountry = 0),
+            catchError(() => {
+              this.errorCountry = value.length;
+              return of([]);
+            }))
+          : of([]);
+
       }),
       map(value => !!value.length ? value.map((v: any) => v.name.common) : value),
     );
@@ -70,16 +70,10 @@ export class SearchUniversityComponent implements OnInit {
     this.universityName.valueChanges
       .pipe(debounceTime(50))
       .subscribe(value => {
-        if (!!this.dataSource) {
-          const val = !!value ? value : '';
-          this.dataSource.filter = val.trim().toLowerCase();
-
-          this.errorUniversityFind = !this.dataSource.filteredData.length;
-
-          if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-          }
-        }
+        if (!this.dataSource) return;
+        const val = !!value ? value : '';
+        this.dataSource.filter = val.trim().toLowerCase();
+        !!this.dataSource.paginator && this.dataSource.paginator.firstPage();
       });
   }
 
