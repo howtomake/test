@@ -1,0 +1,42 @@
+<mat-form-field class="country-name" appearance="fill">
+  <mat-label>Country name</mat-label>
+  <input type="text" placeholder="Enter country name" [formControl]="countryName" matInput [matAutocomplete]="auto">
+  <mat-hint *ngIf="hint">enter country name and get university list</mat-hint>
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onSelect()">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+<mat-hint *ngIf="errorList"><b>nothing found :(</b></mat-hint>
+
+<mat-form-field *ngIf="!!displayedColumns.length && !process" appearance="standard">
+  <mat-label>Enter university name</mat-label>
+  <input matInput placeholder="Ex. Middle" [formControl]="universityName">
+  <mat-hint *ngIf="errorFiltered"><b>nothing found :(</b></mat-hint>
+</mat-form-field>
+
+<div class="list-view" [ngClass]="{'load-end': !!displayedColumns.length && !process && !errorUniversityFind}">
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="dataSource" matSort cdkDropList (cdkDropListDropped)="onDrop($event)">
+
+      <ng-container *ngFor="let field of displayedColumns">
+        <ng-container [matColumnDef]="field">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag>{{ field }}</th>
+          <td mat-cell *matCellDef="let row">{{row[field]}}</td>
+        </ng-container>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </div>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 50, 100]" aria-label="Select page of of university">
+  </mat-paginator>
+
+</div>

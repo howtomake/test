@@ -1,0 +1,36 @@
+.country-name {
+  max-width: 300px;
+  width: 100%;
+}
+
+.list-view {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  transition: all .2s;
+  width: 100%;
+
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    min-width: 800px;
+
+    th,
+    td {
+      &:not(:first-child) {
+        padding-left: 8px;
+      }
+    }
+  }
+
+  &.load-end {
+    opacity: 1;
+    visibility: visible;
+    max-height: initial;
+  }
+}
