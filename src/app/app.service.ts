@@ -12,7 +12,7 @@ export class AppService {
   ) { }
 
   getUniversity(path: any): Observable<any> {
-    return this.http.get(`http://universities.hipolabs.com/search?country=${path}`);
+    return this.http.get(`//universities.hipolabs.com/search?country=${path}`);
   }
 
   getCountry(path: any): Observable<any> {
